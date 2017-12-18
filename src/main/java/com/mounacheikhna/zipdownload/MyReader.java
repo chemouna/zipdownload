@@ -1,10 +1,11 @@
 package com.mounacheikhna.zipdownload;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 public class MyReader {
 
@@ -12,20 +13,34 @@ public class MyReader {
         System.out.println("test");
         //TODO: parse the file into a test model
 
+        ZipFile zipFile = null;
         try {
-            //not sure if this the best way though, maybe using the new FileSystem API is better ?
-            ZipInputStream zin = new ZipInputStream(inputStream);
-            ZipEntry ze;
-            while ((ze = zin.getNextEntry()) != null) {
-                System.out.println("Unzipping " + ze.getName());
-                FileOutputStream fout = new FileOutputStream(ze.getName());
-                Copier.copy(zin, fout);
-                zin.closeEntry();
-                fout.close();
+            zipFile = new ZipFile("test.zip");
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                File entryDestination = new File(new File("content"),  entry.getName());
+                if (entry.isDirectory()) {
+                    entryDestination.mkdirs();
+                } else {
+                    entryDestination.getParentFile().mkdirs();
+                    InputStream in = zipFile.getInputStream(entry);
+                    OutputStream out = new FileOutputStream(entryDestination);
+                    IOUtils.copy(in, out);
+                    IOUtils.closeQuietly(in);
+                    out.close();
+                }
             }
-            zin.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (zipFile != null) {
+                    zipFile.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
