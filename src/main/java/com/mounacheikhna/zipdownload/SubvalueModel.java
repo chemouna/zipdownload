@@ -1,5 +1,9 @@
 package com.mounacheikhna.zipdownload;
 
 public class SubvalueModel {
-    String subfield;
+    public String subfield;
+
+    public SubvalueModel(String subfield) {
+        this.subfield = subfield;
+    }
 }
