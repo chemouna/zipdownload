@@ -16,16 +16,12 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 
 import com.google.api.services.drive.DriveScopes;
-import com.google.api.services.drive.model.*;
 import com.google.api.services.drive.Drive;
 
-import java.io.*;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.*;
 
-public class DriveQuickStart {
+public class DriveDownload {
 
     /**
      * Application name.
@@ -83,7 +79,7 @@ public class DriveQuickStart {
     public static Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                DriveQuickStart.class.getResourceAsStream("/client_secret.json");
+                DriveDownload.class.getResourceAsStream("/client_secret.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -115,7 +111,7 @@ public class DriveQuickStart {
                 .build();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void download() throws IOException {
 
         // Build a new authorized API client service.
         Drive service = getDriveService();
